@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>InstaBooster Pro - Login Fixed</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #090910;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --neon-blue: #00f2ff;
+            --neon-purple: #bc13fe;
+            --text-main: #ffffff;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* --- 3D Background Animation --- */
+        .bg-gradient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.5;
+            animation: float 8s ease-in-out infinite alternate;
+        }
+        .orb-1 { width: 350px; height: 350px; background: var(--neon-purple); top: -50px; left: -50px; }
+        .orb-2 { width: 300px; height: 300px; background: var(--neon-blue); bottom: -50px; right: -50px; animation-delay: -2s; }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(30px) scale(1.1); }
+        }
+
+        /* --- Glassmorphism UI --- */
+        .glass-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        /* --- Inputs --- */
+        .custom-field {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 10px;
+            width: 100%;
+            margin-bottom: 15px;
+            transition: 0.3s;
+        }
+        .custom-field:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+        }
+
+        /* --- Buttons --- */
+        .btn-glow {
+            background: linear-gradient(90deg, var(--neon-blue), #00c6ff);
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            color: #000;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 242, 255, 0.3);
+        }
+        .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 242, 255, 0.5); }
+        
+        .btn-outline-glow {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            width: 100%;
+            transition: 0.3s;
+        }
+        .btn-outline-glow:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+
+        /* --- Navbar --- */
+        .navbar-custom {
+            background: rgba(9, 9, 16, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* --- Helpers --- */
+        .text-neon { color: var(--neon-blue); text-shadow: 0 0 10px rgba(0,242,255,0.5); }
+        .view-section { display: none; padding-top: 80px; padding-bottom: 40px; }
+        
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .glass-box { padding: 20px; }
+            h2 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 3D Backgrounds -->
+    <div class="bg-gradient-orb orb-1"></div>
+    <div class="bg-gradient-orb orb-2"></div>
+
+    <!-- 1. AUTH SCREEN (Login/Signup) -->
+    <div id="authView" class="d-flex align-items-center justify-content-center min-vh-100 px-3">
+        <div class="glass-box text-center w-100" style="max-width: 400px;">
+            <div class="mb-4">
+                <i class="fas fa-cube fa-3x text-neon"></i>
+            </div>
+            <h2 class="fw-bold mb-1">INSTA<span class="text-neon">BOOSTER</span></h2>
+            <p class="text-white-50 mb-4">Ultimate Social Growth</p>
+
+            <!-- Login Form -->
+            <div id="loginForm">
+                <h5 class="text-start mb-3 text-white">Login</h5>
+                <input type="email" id="lEmail" class="custom-field" placeholder="Email Address">
+                <input type="password" id="lPass" class="custom-field" placeholder="Password">
+                <button class="btn-glow mb-3" onclick="handleLogin()">Login Now</button>
+                <div class="text-white-50 small mb-3">OR</div>
+                <button class="btn-outline-glow mb-3" onclick="handleGoogle()">
+                    <i class="fab fa-google text-danger me-2"></i> Continue with Google
+                </button>
+                <p class="small mt-2">Don't have an account? <a href="#" onclick="showForm('signup')" class="text-neon fw-bold">Sign Up</a></p>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signupForm" style="display:none;">
+                <h5 class="text-start mb-3 text-white">Create Account</h5>
+                <input type="email" id="rEmail" class="custom-field" placeholder="Enter Email">
+                <input type="password" id="rPass" class="custom-field" placeholder="Create Password (Min 6 chars)">
+                <button class="btn-glow mb-3" style="background: linear-gradient(90deg, #bc13fe, #7a28cb); color:white;" onclick="handleRegister()">Sign Up</button>
+                <p class="small mt-2">Already registered? <a href="#" onclick="showForm('login')" class="text-neon fw-bold">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. DASHBOARD SCREEN -->
+    <div id="mainView" style="display:none;">
+        
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+            <div class="container">
+                <a class="navbar-brand fw-bold" href="#"><i class="fas fa-cube text-neon"></i> InstaBooster</a>
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mobNav">
+                    <i class="fas fa-bars fs-3"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="mobNav">
+                    <ul class="navbar-nav ms-auto text-center mt-3 mt-lg-0 gap-2">
+                        <li class="nav-item"><a class="nav-link" href="#" onclick="nav('home')">New Order</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" onclick="nav('orders')">History</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" onclick="nav('funds')">Add Funds</a></li>
+                        <li class="nav-item"><a class="btn btn-sm btn-danger mt-2 mt-lg-0" href="#" onclick="logout()">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Home Section -->
+        <div id="homeSection" class="container view-section">
+            <!-- Stats -->
+            <div class="row g-3 mb-4">
+                <div class="col-12 col-md-4">
+                    <div class="glass-box p-3 d-flex align-items-center justify-content-between">
+                        <div>
+                            <small class="text-white-50">Balance</small>
+                            <h3 class="fw-bold mb-0 text-success" id="dBal">₹0.00</h3>
+                        </div>
+                        <i class="fas fa-wallet fa-2x text-white-50"></i>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <div class="glass-box p-3">
+                        <small class="text-white-50">Spent</small>
+                        <h4 class="mb-0 text-warning" id="dSpent">₹0.00</h4>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <div class="glass-box p-3">
+                        <small class="text-white-50">Orders</small>
+                        <h4 class="mb-0 text-info" id="dOrders">0</h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New Order Form -->
+            <div class="glass-box">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-rocket text-neon fs-4 me-2"></i>
+                    <h4 class="mb-0 fw-bold">New Order</h4>
+                </div>
+                
+                <label class="small text-white-50 mb-1">Category</label>
+                <select id="catSel" class="custom-field" onchange="loadServices()"></select>
+
+                <label class="small text-white-50 mb-1">Service</label>
+                <select id="servSel" class="custom-field" onchange="showDetails()"></select>
+
+                <!-- Service Info -->
+                <div class="p-3 rounded mb-3" style="background: rgba(255,255,255,0.05); border: 1px dashed var(--border);">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="badge bg-primary" id="sRate">Rate: ₹0</span>
+                        <span class="badge bg-secondary" id="sTime">Time: -</span>
+                    </div>
+                    <small class="text-white-50 d-block" id="sDesc">Select a service to see details...</small>
+                </div>
+
+                <label class="small text-white-50 mb-1">Link</label>
+                <input type="text" id="oLink" class="custom-field" placeholder="https://...">
+
+                <label class="small text-white-50 mb-1">Quantity</label>
+                <input type="number" id="oQty" class="custom-field" placeholder="Example: 1000" oninput="calc()">
+
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                    <h3 class="text-success mb-0 fw-bold" id="totalPrice">₹0.00</h3>
+                    <button class="btn-glow w-50" onclick="submitOrder()">Order</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Section -->
+        <div id="ordersSection" class="container view-section">
+            <h3 class="mb-3">Order History</h3>
+            <div class="glass-box p-0 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover mb-0" style="background: transparent;">
+                        <thead><tr><th class="p-3">ID</th><th>Service</th><th>Link</th><th>Status</th></tr></thead>
+                        <tbody id="orderTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Funds Section -->
+        <div id="fundsSection" class="container view-section">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="glass-box text-center">
+                        <h4>Add Funds</h4>
+                        <div class="bg-white p-2 rounded d-inline-block my-3">
+                            <img id="qrImg" src="https://via.placeholder.com/150" width="180">
+                        </div>
+                        <p class="small text-warning">Scan QR and Pay via UPI</p>
+
+                        <input type="text" id="ftxn" class="custom-field" placeholder="Enter Transaction ID / UTR">
+                        <input type="number" id="famt" class="custom-field" placeholder="Amount (₹)">
+                        <button class="btn-glow" onclick="addFund()">Verify Payment</button>
+
+                        <div class="mt-4 text-start border-top border-secondary pt-3">
+                            <small class="text-white-50">Recent History:</small>
+                            <ul id="fundList" class="list-unstyled mt-2 small text-white"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+
+    <script>
+        // --- CONFIGURATION ---
+        const firebaseConfig = {
+  apiKey: "AIzaSyDQ8wcVb_uzJQqnAqE0CcFN1LmDVYzwSAI",
+  authDomain: "kbc-2a093.firebaseapp.com",
+  databaseURL: "https://kbc-2a093-default-rtdb.firebaseio.com",
+  projectId: "kbc-2a093",
+  storageBucket: "kbc-2a093.firebasestorage.app",
+  messagingSenderId: "1085537646402",
+  appId: "1:1085537646402:web:4418f6a22fc37147f87adb"
+};
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+        
+        let user = null;
+        let services = [];
+
+        // --- AUTH LOGIC (FIXED) ---
+        auth.onAuthStateChanged(u => {
+            if(u) {
+                user = u;
+                document.getElementById('authView').style.display = 'none';
+                document.getElementById('mainView').style.display = 'block';
+                initApp();
+            } else {
+                document.getElementById('authView').style.display = 'flex';
+                document.getElementById('mainView').style.display = 'none';
+            }
+        });
+
+        function showForm(type) {
+            document.getElementById('loginForm').style.display = type === 'login' ? 'block' : 'none';
+            document.getElementById('signupForm').style.display = type === 'signup' ? 'block' : 'none';
+        }
+
+        function handleLogin() {
+            const e = document.getElementById('lEmail').value;
+            const p = document.getElementById('lPass').value;
+            if(!e || !p) return alert("Please enter email and password");
+
+            auth.signInWithEmailAndPassword(e, p)
+                .catch(err => {
+                    let msg = err.message;
+                    if(err.code === 'auth/user-not-found') msg = "No account found. Please Sign Up.";
+                    if(err.code === 'auth/wrong-password') msg = "Incorrect password.";
+                    alert(msg);
+                });
+        }
+
+        function handleRegister() {
+            const e = document.getElementById('rEmail').value;
+            const p = document.getElementById('rPass').value;
+            if(!e || !p) return alert("Please fill all fields");
+            if(p.length < 6) return alert("Password must be at least 6 characters");
+
+            auth.createUserWithEmailAndPassword(e, p)
+                .then((cred) => {
+                    // Create DB Entry
+                    db.ref('users/' + cred.user.uid).set({
+                        email: e,
+                        balance: 0,
+                        spent: 0
+                    });
+                    alert("Account Created! You are now logged in.");
+                })
+                .catch(err => {
+                    let msg = err.message;
+                    if(err.code === 'auth/email-already-in-use') msg = "Email already used. Please Login.";
+                    alert(msg);
+                });
+        }
+
+        function handleGoogle() {
+            auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e => alert(e.message));
+        }
+
+        function logout() { auth.signOut(); }
+
+        // --- APP LOGIC ---
+        function initApp() {
+            // Balance
+            db.ref('users/'+user.uid).on('value', s => {
+                const d = s.val() || {};
+                document.getElementById('dBal').innerText = `₹${(d.balance||0).toFixed(2)}`;
+                document.getElementById('dSpent').innerText = `₹${(d.spent||0).toFixed(2)}`;
+            });
+
+            // Settings
+            db.ref('settings').on('value', s => {
+                if(s.val()?.qrLink) document.getElementById('qrImg').src = s.val().qrLink;
+            });
+
+            // Categories
+            db.ref('categories').on('value', s => {
+                const sel = document.getElementById('catSel');
+                sel.innerHTML = '<option value="">Select Category</option>';
+                s.forEach(c => sel.innerHTML += `<option value="${c.key}">${c.val().name}</option>`);
+            });
+
+            // Orders List
+            db.ref('orders').orderByChild('uid').equalTo(user.uid).on('value', s => {
+                document.getElementById('dOrders').innerText = s.numChildren();
+                const t = document.getElementById('orderTable'); t.innerHTML = '';
+                const arr = [];
+                s.forEach(c => arr.unshift(c.val()));
+                
+                arr.forEach(o => {
+                    let badge = 'bg-secondary';
+                    if(o.status === 'Completed') badge = 'bg-success';
+                    if(o.status === 'Processing') badge = 'bg-info';
+                    t.innerHTML += `<tr><td class="p-3">#${o.id.toString().slice(-4)}</td><td>${o.serviceName}</td><td><a href="${o.link}" class="text-neon"><i class="fas fa-link"></i></a></td><td><span class="badge ${badge}">${o.status}</span></td></tr>`;
+                });
+            });
+
+            // Funds List
+            db.ref('funds').orderByChild('uid').equalTo(user.uid).on('value', s => {
+                const l = document.getElementById('fundList'); l.innerHTML = '';
+                const arr = [];
+                s.forEach(c => arr.unshift(c.val()));
+                arr.slice(0,5).forEach(f => {
+                    l.innerHTML += `<li class="d-flex justify-content-between py-1 border-bottom border-secondary"><span>₹${f.amount}</span><span class="${f.status==='Approved'?'text-success':'text-warning'}">${f.status}</span></li>`;
+                });
+            });
+        }
+
+        // --- ORDER FUNCTIONS ---
+        function loadServices() {
+            const cat = document.getElementById('catSel').value;
+            const sel = document.getElementById('servSel');
+            sel.innerHTML = '<option value="">Select Service</option>';
+            if(!cat) return;
+
+            db.ref('services').orderByChild('catId').equalTo(cat).once('value', s => {
+                services = [];
+                s.forEach(c => {
+                    services.push({key: c.key, ...c.val()});
+                    sel.innerHTML += `<option value="${c.key}">${c.val().name}</option>`;
+                });
+            });
+        }
+
+        function showDetails() {
+            const sid = document.getElementById('servSel').value;
+            const s = services.find(x => x.key === sid);
+            if(s) {
+                document.getElementById('sRate').innerText = `Rate: ₹${s.rate}`;
+                document.getElementById('sTime').innerText = `Time: ${s.time}`;
+                document.getElementById('sDesc').innerText = s.desc || '';
+                calc();
+            }
+        }
+
+        function calc() {
+            const qty = document.getElementById('oQty').value;
+            const sid = document.getElementById('servSel').value;
+            const s = services.find(x => x.key === sid);
+            if(s && qty) document.getElementById('totalPrice').innerText = `₹${((qty/1000)*s.rate).toFixed(2)}`;
+            else document.getElementById('totalPrice').innerText = `₹0.00`;
+        }
+
+        function submitOrder() {
+            const sid = document.getElementById('servSel').value;
+            const qty = document.getElementById('oQty').value;
+            const link = document.getElementById('oLink').value;
+            const s = services.find(x => x.key === sid);
+
+            if(!sid || !qty || !link) return alert("Fill all fields");
+
+            const cost = (qty/1000) * s.rate;
+            db.ref('users/'+user.uid).once('value', sn => {
+                if((sn.val().balance || 0) < cost) return alert("Insufficient Funds!");
+                
+                const oid = Date.now();
+                const up = {};
+                up['users/'+user.uid+'/balance'] = (sn.val().balance||0) - cost;
+                up['users/'+user.uid+'/spent'] = (sn.val().spent||0) + cost;
+                up['orders/'+oid] = { id:oid, uid:user.uid, serviceName:s.name, link:link, quantity:qty, charge:cost, status:'Pending' };
+                
+                db.ref().update(up).then(() => {
+                    alert("Order Placed Successfully!");
+                    nav('orders');
+                });
+            });
+        }
+
+        // --- FUND FUNCTION ---
+        function addFund() {
+            const tx = document.getElementById('ftxn').value;
+            const am = parseFloat(document.getElementById('famt').value);
+            if(!tx || !am) return alert("Enter valid details");
+
+            db.ref('funds').push({
+                uid: user.uid,
+                email: user.email,
+                txnId: tx,
+                amount: am,
+                status: 'Pending',
+                date: Date.now()
+            }).then(() => {
+                alert("Payment Verification Sent!");
+                document.getElementById('ftxn').value = '';
+            });
+        }
+
+        // --- NAV ---
+        function nav(p) {
+            document.querySelectorAll('.view-section').forEach(d => d.style.display = 'none');
+            document.getElementById(p+'Section').style.display = 'block';
+            const m = document.getElementById('mobNav');
+            if(m.classList.contains('show')) new bootstrap.Collapse(m).hide();
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
