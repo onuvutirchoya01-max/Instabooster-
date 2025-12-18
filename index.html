@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        :root { --bg: #050505; --primary: #00f3ff; --secondary: #ff00ff; --card-bg: rgba(20, 20, 30, 0.85); }
+        :root { --bg: #050505; --primary: #00f3ff; --secondary: #ff00ff; --card-bg: rgba(20, 20, 30, 0.85); --wa-color: #25D366; }
         * { box-sizing: border-box; }
         body { background-color: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; margin: 0; padding: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
         
@@ -31,6 +31,30 @@
         .neon-input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0,243,255,0.2); outline: none; }
         .btn-cyber { background: linear-gradient(90deg, var(--primary), #0088ff); border: none; color: #000; font-weight: 800; padding: 10px; width: 100%; border-radius: 50px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; font-size: 0.85rem; text-transform: uppercase; box-shadow: 0 0 15px rgba(0,243,255,0.4); }
         .btn-cyber:active { transform: scale(0.98); }
+
+        /* --- WHATSAPP FLOATING BUTTON --- */
+        .wa-float {
+            position: fixed; bottom: 85px; right: 15px; z-index: 900;
+            background: rgba(0, 0, 0, 0.85); border: 1px solid var(--wa-color);
+            border-radius: 50px; padding: 8px 16px;
+            display: flex; align-items: center; gap: 8px;
+            text-decoration: none; backdrop-filter: blur(5px);
+            box-shadow: 0 0 15px rgba(37, 211, 102, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: pulse-green 2s infinite;
+        }
+        .wa-float:hover { transform: scale(1.05); background: var(--wa-color); box-shadow: 0 0 25px rgba(37, 211, 102, 0.6); }
+        .wa-float:hover span { color: #000; }
+        .wa-float:hover i { color: #000; }
+        .wa-text { color: #fff; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.5px; transition: 0.3s; }
+        .wa-sub { font-size: 0.6rem; color: #bbb; display: block; line-height: 1; margin-top: 2px; text-transform: uppercase; }
+        .wa-float:hover .wa-sub { color: #333; }
+        
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
 
         /* --- QR SCANNER ANIMATION --- */
         .qr-frame { position: relative; padding: 5px; background: rgba(0,0,0,0.5); border: 1px solid var(--primary); border-radius: 10px; display: inline-block; box-shadow: 0 0 15px rgba(0,243,255,0.1); }
@@ -95,7 +119,7 @@
             <!-- HOME TAB -->
             <div id="tab-home" class="tab-view" style="display:block;">
                 
-                <!-- NEW: USER EMAIL DISPLAY -->
+                <!-- USER EMAIL DISPLAY -->
                 <div class="cyber-card text-center py-2 mb-2" style="border-bottom: 2px solid var(--secondary);">
                     <small class="text-white-50 font-tech" style="font-size:0.65rem; letter-spacing:1px;">CURRENT USER</small>
                     <div class="d-flex justify-content-center align-items-center mt-1">
@@ -126,7 +150,12 @@
                     </div>
 
                     <input id="link" class="neon-input" style="padding:8px;" placeholder="Link (https://...)">
-                    <input id="qty" type="number" class="neon-input" style="padding:8px;" placeholder="Quantity (Ex: 1000)" oninput="calcPrice()">
+                    
+                    <!-- QUANTITY INPUT -->
+                    <input id="qty" type="number" class="neon-input mb-1" style="padding:8px;" placeholder="Quantity (100 - 1M)" oninput="calcPrice()">
+                    <small class="text-white-50 d-block mb-2 ps-1" style="font-size: 0.7rem; font-family:'Orbitron', sans-serif; color: var(--primary) !important;">
+                        <i class="fas fa-info-circle"></i> Min: 100 | Max: 1,000,000
+                    </small>
                     
                     <button class="btn-cyber mt-1" style="padding:8px;" onclick="placeOrder()">
                         CONFIRM <span id="btn-price" style="opacity:0.8;">(₹0.00)</span>
@@ -171,6 +200,15 @@
                 <div id="list-fund"><div class="text-center text-white-50 mt-3">Loading History...</div></div>
             </div>
         </div>
+
+        <!-- WHATSAPP FLOATING BUTTON -->
+        <a href="https://wa.me/919332861132" target="_blank" class="wa-float">
+            <i class="fab fa-whatsapp" style="font-size: 1.8rem; color: #25D366;"></i>
+            <div>
+                <span class="wa-text">Help & Support</span>
+                <span class="wa-sub">Click to Chat</span>
+            </div>
+        </a>
 
         <div class="nav-dock">
             <button class="nav-item active" onclick="nav('home', this)"><i class="fas fa-rocket"></i></button>
@@ -362,7 +400,11 @@
             const qty = document.getElementById('qty').value;
             const link = document.getElementById('link').value;
             const service = allServices.find(s => s.key === svcKey);
+            
+            // --- VALIDATION LOGIC ---
             if(!service || !qty || !link) return alert("Please fill all fields!");
+            if(parseInt(qty) < 100) return alert("Minimum quantity is 100!");
+            if(parseInt(qty) > 1000000) return alert("Maximum quantity is 1 Million (1,000,000)!");
             
             const cost = ((qty / 1000) * service.rate).toFixed(2);
             db.ref('users/'+user.uid).once('value', sn=>{
